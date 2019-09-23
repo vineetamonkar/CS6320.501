@@ -1,5 +1,5 @@
 #  Created by Takshak Desai and Mithun Balakrishna on 9/22/19.
-#  Copyright © 2019 Takshak Desai. All rights reserved.
+#  Copyright 2019 Takshak Desai. All rights reserved.
 
 import sys
 import os
@@ -26,6 +26,7 @@ def get_scores(true_tags, predicted_tags, prec = 3):
 			gold_tag = true_tags[key]
 			predicted_tag = predicted_tags[key]
 			if gold_tag == predicted_tag:
+				print (predicted_tag, label)
 				if predicted_tag == label:
 					tp +=1
 			else:
@@ -33,9 +34,18 @@ def get_scores(true_tags, predicted_tags, prec = 3):
 					fp +=1
 				else:
 					fn +=1
-		recall = float(tp)/(tp+fn)
-		precision = float(tp)/(tp+fp)
-		fscore = 2*precision*recall/(precision+recall)
+		try:
+			recall = float(tp)/(tp+fn)
+		except ZeroDivisionError:
+			recall = 0.0
+		try:
+			precision = float(tp)/(tp+fp)
+		except:
+			precision = 0.0
+		try:
+			fscore = 2*precision*recall/(precision+recall)
+		except ZeroDivisionError:
+			fscore = 0.0
 		classification_report[label]['recall'] = round(recall, prec)
 		classification_report[label]['precision'] = round(precision, prec)
 		classification_report[label]['fscore'] = round(fscore, prec)
@@ -92,6 +102,7 @@ if __name__ == "__main__":
 		assert (gold_tags.keys() == predicted_tags.keys())
 	except AssertionError:
 		sys.exit("Gold and predicted file do not contain same number of predictions!")
+	print (gold_tags, predicted_tags)
 	classification_report = get_scores(gold_tags, predicted_tags)
 	pretty_print(classification_report)
 
