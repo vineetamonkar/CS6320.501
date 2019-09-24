@@ -40,7 +40,7 @@ def get_scores(true_tags, predicted_tags, prec = 3):
 			recall = 0.0
 		try:
 			precision = float(tp)/(tp+fp)
-		except:
+		except ZeroDivisionError:
 			precision = 0.0
 		try:
 			fscore = 2*precision*recall/(precision+recall)
@@ -102,7 +102,6 @@ if __name__ == "__main__":
 		assert (gold_tags.keys() == predicted_tags.keys())
 	except AssertionError:
 		sys.exit("Gold and predicted file do not contain same number of predictions!")
-	print (gold_tags, predicted_tags)
 	classification_report = get_scores(gold_tags, predicted_tags)
 	pretty_print(classification_report)
 
